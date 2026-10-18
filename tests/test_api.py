@@ -312,3 +312,29 @@ def test_vapi_webhook_register_patient_validation_error():
     assert "VALIDATION_ERROR:" in result_str
     assert "future" in result_str.lower()
 
+
+def test_vapi_webhook_toolCallList_format():
+    """Verify toolCallList format (used by newer Vapi versions) works correctly."""
+    payload = {
+        "message": {
+            "type": "tool-calls",
+            "toolCallList": [
+                {
+                    "id": "test_list_1",
+                    "type": "function",
+                    "function": {
+                        "name": "check_existing_patient",
+                        "arguments": {"phone_number": "5551234567"}
+                    }
+                }
+            ]
+        }
+    }
+    response = client.post("/vapi/webhook", json=payload)
+    assert response.status_code == 200
+    res = response.json()
+    assert len(res["results"]) == 1
+    assert res["results"][0]["toolCallId"] == "test_list_1"
+    assert "NOT_FOUND:" in res["results"][0]["result"]
+
+

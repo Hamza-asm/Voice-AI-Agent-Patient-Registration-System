@@ -302,11 +302,14 @@ async def vapi_webhook(request: Request):
         logger.info("END OF CALL TRANSCRIPT: %s", transcript[:500])
         return JSONResponse(status_code=200, content={"received": True})
 
-    # Handle tool-calls
-    tool_calls = message.get("toolCalls", [])
-    if not tool_calls:
-        # Also check top-level for older Vapi format
-        tool_calls = body.get("toolCalls", [])
+    # Handle tool-calls (support both toolCalls and toolCallList across Vapi API versions)
+    tool_calls = (
+        message.get("toolCalls")
+        or message.get("toolCallList")
+        or body.get("toolCalls")
+        or body.get("toolCallList")
+        or []
+    )
 
     results = []
 
