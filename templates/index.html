@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Voice AI Patient Registration — Live Dashboard</title>
+  <style>
+    :root {
+      --coal: #0B0C10;
+      --navy: #1F2833;
+      --silver: #C5C6C7;
+      --white: #FFFFFF;
+      --accent: #66FCF1;
+      --accent2: #45A29E;
+      --danger: #FF4C4C;
+      --success: #4CFF91;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--coal);
+      color: var(--silver);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--navy);
+      border-bottom: 1px solid var(--accent2);
+      padding: 1.2rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--accent);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    .brand-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: 0.03em;
+    }
+
+    .brand-subtitle {
+      font-size: 0.72rem;
+      color: var(--accent2);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .status-pills {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      padding: 0.28rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      border: 1px solid;
+    }
+
+    .pill-live { color: var(--success); border-color: var(--success); background: rgba(76,255,145,0.08); }
+    .pill-vapi { color: var(--accent); border-color: var(--accent); background: rgba(102,252,241,0.08); }
+    .pill-db   { color: var(--accent2); border-color: var(--accent2); background: rgba(69,162,158,0.08); }
+
+    .header-links {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .header-links a {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.82rem;
+      padding: 0.3rem 0.7rem;
+      border: 1px solid var(--accent2);
+      border-radius: 6px;
+      transition: background 0.15s;
+    }
+    .header-links a:hover { background: rgba(102,252,241,0.1); }
+
+    /* ── Main ── */
+    main {
+      padding: 1.5rem 2rem;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    /* ── Stats bar ── */
+    .stats-bar {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .stat-card {
+      background: var(--navy);
+      border: 1px solid #2a3a4a;
+      border-radius: 10px;
+      padding: 0.9rem 1.4rem;
+      min-width: 140px;
+    }
+
+    .stat-label {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent2);
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-value {
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    /* ── Search bar ── */
+    .search-bar {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+      align-items: flex-end;
+    }
+
+    .search-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .search-group label {
+      font-size: 0.72rem;
+      color: var(--accent2);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+    }
+
+    .search-group input {
+      background: var(--navy);
+      border: 1px solid #2a3a4a;
+      color: var(--white);
+      padding: 0.5rem 0.85rem;
+      border-radius: 7px;
+      font-size: 0.88rem;
+      outline: none;
+      transition: border-color 0.15s;
+      min-width: 180px;
+    }
+    .search-group input:focus { border-color: var(--accent2); }
+    .search-group input::placeholder { color: #666; }
+
+    .btn {
+      padding: 0.52rem 1.2rem;
+      border-radius: 7px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.88rem;
+      font-weight: 600;
+      transition: all 0.15s;
+    }
+    .btn-primary {
+      background: var(--accent2);
+      color: var(--coal);
+    }
+    .btn-primary:hover { background: var(--accent); }
+    .btn-ghost {
+      background: transparent;
+      color: var(--silver);
+      border: 1px solid #2a3a4a;
+    }
+    .btn-ghost:hover { border-color: var(--silver); }
+
+    /* ── Refresh indicator ── */
+    .refresh-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+      color: var(--accent2);
+      margin-bottom: 0.75rem;
+    }
+
+    .pulse {
+      width: 8px; height: 8px;
+      background: var(--success);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    /* ── Table ── */
+    .table-wrapper {
+      background: var(--navy);
+      border: 1px solid #2a3a4a;
+      border-radius: 12px;
+      overflow: hidden;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.83rem;
+    }
+
+    thead {
+      background: #141a22;
+    }
+
+    th {
+      padding: 0.8rem 1rem;
+      text-align: left;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent2);
+      border-bottom: 1px solid #2a3a4a;
+      white-space: nowrap;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid #1a232d;
+      transition: background 0.1s;
+    }
+
+    tbody tr:hover { background: rgba(102,252,241,0.04); }
+    tbody tr:last-child { border-bottom: none; }
+
+    td {
+      padding: 0.75rem 1rem;
+      color: var(--silver);
+      white-space: nowrap;
+    }
+
+    .td-name { color: var(--white); font-weight: 600; }
+    .td-id {
+      font-family: monospace;
+      font-size: 0.72rem;
+      color: var(--accent2);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.18rem 0.55rem;
+      border-radius: 999px;
+      font-size: 0.68rem;
+      font-weight: 600;
+    }
+    .badge-male   { background: rgba(102,252,241,0.1); color: var(--accent); }
+    .badge-female { background: rgba(255,100,200,0.1); color: #FF64C8; }
+    .badge-other  { background: rgba(197,198,199,0.1); color: var(--silver); }
+
+    /* ── Empty state ── */
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: #555;
+    }
+    .empty-state .icon { font-size: 2.5rem; margin-bottom: 1rem; }
+    .empty-state p { font-size: 0.95rem; }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.72rem;
+      color: #444;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="brand-icon">🎙️</div>
+    <div>
+      <div class="brand-title">Wellness Partners</div>
+      <div class="brand-subtitle">Voice AI Patient Registration</div>
+    </div>
+  </div>
+
+  <div class="status-pills">
+    <span class="pill pill-live">● Live</span>
+    <span class="pill pill-vapi">Vapi Ready</span>
+    <span class="pill pill-db">Supabase Connected</span>
+  </div>
+
+  <div class="header-links">
+    <a href="/docs" target="_blank">📄 Swagger Docs</a>
+    <a href="/patients" target="_blank">🔗 Raw JSON</a>
+  </div>
+</header>
+
+<main>
+  <div class="stats-bar">
+    <div class="stat-card">
+      <div class="stat-label">Total Registered</div>
+      <div class="stat-value" id="total-count">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Last Updated</div>
+      <div class="stat-value" id="last-updated" style="font-size:1rem; padding-top:0.3rem;">—</div>
+    </div>
+  </div>
+
+  <div class="search-bar">
+    <div class="search-group">
+      <label>Last Name</label>
+      <input type="text" id="filter-last-name" placeholder="e.g. Smith" />
+    </div>
+    <div class="search-group">
+      <label>Phone Number</label>
+      <input type="text" id="filter-phone" placeholder="e.g. 5551234567" />
+    </div>
+    <div class="search-group">
+      <label>Date of Birth (YYYY-MM-DD)</label>
+      <input type="text" id="filter-dob" placeholder="e.g. 1985-03-22" />
+    </div>
+    <button class="btn btn-primary" onclick="applyFilters()">Search</button>
+    <button class="btn btn-ghost" onclick="clearFilters()">Clear</button>
+  </div>
+
+  <div class="refresh-indicator">
+    <div class="pulse"></div>
+    Auto-refreshing every 5 seconds
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Patient ID</th>
+          <th>Name</th>
+          <th>DOB</th>
+          <th>Sex</th>
+          <th>Phone</th>
+          <th>Location</th>
+          <th>Insurance</th>
+          <th>Language</th>
+          <th>Emergency Contact</th>
+          <th>Registered (UTC)</th>
+        </tr>
+      </thead>
+      <tbody id="patients-tbody">
+        <tr>
+          <td colspan="10" class="empty-state">
+            <div class="icon">⏳</div>
+            <p>Loading patients...</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+
+<footer>
+  Voice AI Patient Registration System &mdash; Wellness Partners &mdash; Powered by Vapi + FastAPI + Supabase
+</footer>
+
+<script>
+  let currentFilters = {};
+  let refreshInterval;
+
+  function formatDate(isoStr) {
+    if (!isoStr) return '—';
+    const d = new Date(isoStr);
+    return d.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
+  }
+
+  function formatDateTime(isoStr) {
+    if (!isoStr) return '—';
+    const d = new Date(isoStr);
+    return d.toISOString().replace('T', ' ').substring(0, 19);
+  }
+
+  function formatDob(dobStr) {
+    if (!dobStr) return '—';
+    // Parse as local date to avoid UTC offset shifting
+    const parts = dobStr.split('-');
+    if (parts.length === 3) {
+      return `${parts[1]}/${parts[2]}/${parts[0]}`;
+    }
+    return dobStr;
+  }
+
+  function sexBadge(sex) {
+    const cls = sex === 'Male' ? 'badge-male'
+               : sex === 'Female' ? 'badge-female'
+               : 'badge-other';
+    return `<span class="badge ${cls}">${sex || '—'}</span>`;
+  }
+
+  function truncateId(id) {
+    return id ? id.substring(0, 8) + '…' : '—';
+  }
+
+  function formatPhone(p) {
+    if (!p || p.length !== 10) return p || '—';
+    return `(${p.slice(0,3)}) ${p.slice(3,6)}-${p.slice(6)}`;
+  }
+
+  function renderRow(p) {
+    const location = [p.city, p.state, p.zip_code].filter(Boolean).join(', ');
+    const insurance = p.insurance_provider
+      ? `${p.insurance_provider}${p.insurance_member_id ? ' · ' + p.insurance_member_id : ''}`
+      : '—';
+    const emergency = p.emergency_contact_name
+      ? `${p.emergency_contact_name}${p.emergency_contact_phone ? ' · ' + formatPhone(p.emergency_contact_phone) : ''}`
+      : '—';
+
+    return `
+      <tr>
+        <td class="td-id" title="${p.patient_id}">${truncateId(p.patient_id)}</td>
+        <td class="td-name">${p.first_name} ${p.last_name}</td>
+        <td>${formatDob(p.date_of_birth)}</td>
+        <td>${sexBadge(p.sex)}</td>
+        <td>${formatPhone(p.phone_number)}</td>
+        <td>${location || '—'}</td>
+        <td>${insurance}</td>
+        <td>${p.preferred_language || 'English'}</td>
+        <td>${emergency}</td>
+        <td>${formatDateTime(p.created_at)}</td>
+      </tr>`;
+  }
+
+  async function fetchPatients() {
+    const params = new URLSearchParams();
+    if (currentFilters.last_name) params.set('last_name', currentFilters.last_name);
+    if (currentFilters.phone_number) params.set('phone_number', currentFilters.phone_number);
+    if (currentFilters.date_of_birth) params.set('date_of_birth', currentFilters.date_of_birth);
+
+    const url = '/patients' + (params.toString() ? '?' + params.toString() : '');
+
+    try {
+      const resp = await fetch(url);
+      const json = await resp.json();
+      const patients = json.data || [];
+
+      const tbody = document.getElementById('patients-tbody');
+      const totalEl = document.getElementById('total-count');
+      const lastUpdEl = document.getElementById('last-updated');
+
+      totalEl.textContent = patients.length;
+      lastUpdEl.textContent = formatDateTime(new Date().toISOString());
+
+      if (patients.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="10">
+              <div class="empty-state">
+                <div class="icon">📋</div>
+                <p>No patients found. Dial the number to register the first patient.</p>
+              </div>
+            </td>
+          </tr>`;
+      } else {
+        tbody.innerHTML = patients.map(renderRow).join('');
+      }
+    } catch (err) {
+      console.error('Failed to fetch patients:', err);
+    }
+  }
+
+  function applyFilters() {
+    currentFilters = {
+      last_name: document.getElementById('filter-last-name').value.trim(),
+      phone_number: document.getElementById('filter-phone').value.trim(),
+      date_of_birth: document.getElementById('filter-dob').value.trim(),
+    };
+    fetchPatients();
+  }
+
+  function clearFilters() {
+    currentFilters = {};
+    document.getElementById('filter-last-name').value = '';
+    document.getElementById('filter-phone').value = '';
+    document.getElementById('filter-dob').value = '';
+    fetchPatients();
+  }
+
+  // Initial load + auto-refresh every 5 seconds
+  fetchPatients();
+  refreshInterval = setInterval(fetchPatients, 5000);
+
+  // Allow Enter key to search
+  document.querySelectorAll('.search-bar input').forEach(input => {
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') applyFilters(); });
+  });
+</script>
+</body>
+</html>

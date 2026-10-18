@@ -1,0 +1,194 @@
+[
+  {
+    "type": "function",
+    "function": {
+      "name": "check_existing_patient",
+      "description": "Checks if a patient already exists in the system by their 10-digit U.S. phone number. Always call this before registering a new patient.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "phone_number": {
+            "type": "string",
+            "description": "The 10-digit U.S. phone number without formatting (e.g. 5551234567)"
+          }
+        },
+        "required": ["phone_number"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "register_patient",
+      "description": "Registers a new patient with required demographic info and optional fields. Call this only after reading back all details and receiving explicit confirmation from the caller. If updating an existing patient, include the patient_id.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "patient_id": {
+            "type": "string",
+            "description": "Optional UUID if updating an existing record identified during check_existing_patient."
+          },
+          "first_name": {
+            "type": "string",
+            "description": "Patient's legal first name (1-50 alphabetic characters, hyphens, or apostrophes)."
+          },
+          "last_name": {
+            "type": "string",
+            "description": "Patient's legal last name (1-50 alphabetic characters, hyphens, or apostrophes)."
+          },
+          "date_of_birth": {
+            "type": "string",
+            "description": "Patient's date of birth formatted strictly as MM/DD/YYYY (e.g., 03/22/1985). Must not be in the future."
+          },
+          "sex": {
+            "type": "string",
+            "enum": ["Male", "Female", "Other", "Decline to Answer"],
+            "description": "Patient's biological/recorded sex."
+          },
+          "phone_number": {
+            "type": "string",
+            "description": "Primary contact 10-digit U.S. phone number (e.g., 5551234567)."
+          },
+          "email": {
+            "type": "string",
+            "description": "Optional email address."
+          },
+          "address_line_1": {
+            "type": "string",
+            "description": "Primary street address (e.g., 123 Main St)."
+          },
+          "address_line_2": {
+            "type": "string",
+            "description": "Apartment, suite, or unit number if applicable."
+          },
+          "city": {
+            "type": "string",
+            "description": "City of residence."
+          },
+          "state": {
+            "type": "string",
+            "description": "Two-letter uppercase U.S. state abbreviation (e.g., NY, CA, TX)."
+          },
+          "zip_code": {
+            "type": "string",
+            "description": "5-digit ZIP code (e.g., 10001) or ZIP+4 (e.g., 10001-1234)."
+          },
+          "insurance_provider": {
+            "type": "string",
+            "description": "Name of health insurance company (optional)."
+          },
+          "insurance_member_id": {
+            "type": "string",
+            "description": "Alphanumeric insurance member/subscriber ID (optional)."
+          },
+          "preferred_language": {
+            "type": "string",
+            "description": "Preferred spoken language, defaults to English."
+          },
+          "emergency_contact_name": {
+            "type": "string",
+            "description": "Full name of emergency contact (optional)."
+          },
+          "emergency_contact_phone": {
+            "type": "string",
+            "description": "10-digit U.S. phone number of emergency contact (optional)."
+          }
+        },
+        "required": [
+          "first_name",
+          "last_name",
+          "date_of_birth",
+          "sex",
+          "phone_number",
+          "address_line_1",
+          "city",
+          "state",
+          "zip_code"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "update_patient",
+      "description": "Updates specific fields on an existing patient record. Only provide the fields that need to be changed.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "patient_id": {
+            "type": "string",
+            "description": "UUID of the patient record to update (required)."
+          },
+          "first_name": {
+            "type": "string",
+            "description": "Updated first name."
+          },
+          "last_name": {
+            "type": "string",
+            "description": "Updated last name."
+          },
+          "date_of_birth": {
+            "type": "string",
+            "description": "Updated date of birth (MM/DD/YYYY)."
+          },
+          "sex": {
+            "type": "string",
+            "enum": ["Male", "Female", "Other", "Decline to Answer"],
+            "description": "Updated sex."
+          },
+          "phone_number": {
+            "type": "string",
+            "description": "Updated 10-digit U.S. phone number."
+          },
+          "email": {
+            "type": "string",
+            "description": "Updated email address."
+          },
+          "address_line_1": {
+            "type": "string",
+            "description": "Updated street address."
+          },
+          "address_line_2": {
+            "type": "string",
+            "description": "Updated apartment or unit number."
+          },
+          "city": {
+            "type": "string",
+            "description": "Updated city."
+          },
+          "state": {
+            "type": "string",
+            "description": "Updated 2-letter uppercase state abbreviation."
+          },
+          "zip_code": {
+            "type": "string",
+            "description": "Updated ZIP code."
+          },
+          "insurance_provider": {
+            "type": "string",
+            "description": "Updated insurance provider."
+          },
+          "insurance_member_id": {
+            "type": "string",
+            "description": "Updated member ID."
+          },
+          "preferred_language": {
+            "type": "string",
+            "description": "Updated preferred language."
+          },
+          "emergency_contact_name": {
+            "type": "string",
+            "description": "Updated emergency contact name."
+          },
+          "emergency_contact_phone": {
+            "type": "string",
+            "description": "Updated emergency contact phone (10 digits)."
+          }
+        },
+        "required": ["patient_id"]
+      }
+    }
+  }
+]
+
