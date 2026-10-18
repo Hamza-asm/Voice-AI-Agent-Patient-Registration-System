@@ -188,7 +188,7 @@ All endpoints wrap responses in a standardized envelope:
 ### 2. Installation
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/Voice-AI-Agent-Patient-Registration-System.git
+git clone https://github.com/Hamza-asm/Voice-AI-Agent-Patient-Registration-System.git
 cd Voice-AI-Agent-Patient-Registration-System
 
 # Create and activate virtual environment
