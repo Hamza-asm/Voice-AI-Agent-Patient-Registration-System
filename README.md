@@ -1,6 +1,26 @@
-# Voice AI Patient Registration System
+<p align="center">
+  <img src="images/Voice%20AI%20Patient%20Registration%20Banner.png" alt="Voice AI Patient Registration System Banner" width="100%" />
+</p>
 
-A production-grade, voice-driven patient registration system. Callers dial a provisioned U.S. phone number to register or update their demographic information through a natural, human-like voice conversation with **Riley**, an AI intake coordinator. Patient records are strictly validated and persisted to a Supabase PostgreSQL database, and exposed via a robust FastAPI REST API and live dashboard.
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python" />
+  <img src="https://img.shields.io/badge/FastAPI-0.110+-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI" />
+  <img src="https://img.shields.io/badge/Pydantic-v2-E92063?style=for-the-badge&logo=pydantic&logoColor=white" alt="Pydantic v2" />
+  <img src="https://img.shields.io/badge/Vapi-Voice%20AI-5B21B6?style=for-the-badge&logo=podcast&logoColor=white" alt="Vapi" />
+  <img src="https://img.shields.io/badge/OpenAI-GPT--6%20Luna-412991?style=for-the-badge&logo=openai&logoColor=white" alt="OpenAI" />
+  <img src="https://img.shields.io/badge/Soniox-RT%20v5-006699?style=for-the-badge&logo=soundcharts&logoColor=white" alt="Soniox" />
+  <br/>
+  <img src="https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white" alt="Supabase" />
+  <img src="https://img.shields.io/badge/Render-Live%20Deploy-46E3B7?style=for-the-badge&logo=render&logoColor=black" alt="Render" />
+  <img src="https://img.shields.io/badge/Pytest-18%2F18%20Passed-0A9EDC?style=for-the-badge&logo=pytest&logoColor=white" alt="Pytest" />
+  <img src="https://img.shields.io/badge/Uvicorn-ASGI-499848?style=for-the-badge&logo=gunicorn&logoColor=white" alt="Uvicorn" />
+</p>
+
+# Voice AI Patient Registration — [Live Demo](https://voice-ai-agent-patient-registration-c7h9.onrender.com)
+
+**Conversational clinical intake agent with real-time telephony, deterministic validation, and Supabase persistence.**
+
+Callers dial a provisioned U.S. phone number to register or update their demographic information through a natural, human-like voice conversation with **Riley**, an AI intake coordinator at Wellness Partners. Patient records are strictly validated and persisted to a Supabase PostgreSQL database, and exposed via a robust FastAPI REST API and auto-refreshing live dashboard.
 
 ---
 
@@ -188,7 +208,7 @@ All endpoints wrap responses in a standardized envelope:
 ### 2. Installation
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/Voice-AI-Agent-Patient-Registration-System.git
+git clone https://github.com/Hamza-asm/Voice-AI-Agent-Patient-Registration-System.git
 cd Voice-AI-Agent-Patient-Registration-System
 
 # Create and activate virtual environment
