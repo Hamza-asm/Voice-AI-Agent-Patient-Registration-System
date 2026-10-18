@@ -32,14 +32,32 @@ def get_db() -> Client:
     """Return a cached Supabase client, creating it on first call."""
     global _supabase_client
     if _supabase_client is None:
-        url = os.getenv("SUPABASE_URL")
-        key = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
+        url = os.getenv("SUPABASE_URL") or os.getenv("NEXT_PUBLIC_SUPABASE_URL")
+        key = (
+            os.getenv("SUPABASE_SERVICE_ROLE_KEY")
+            or os.getenv("SUPABASE_SERVICE_KEY")
+            or os.getenv("SUPABASE_KEY")
+            or os.getenv("SUPABASE_ANON_KEY")
+        )
+        if url:
+            url = url.strip().strip("'\"")
+        if key:
+            key = key.strip().strip("'\"")
+
         if not url or not key:
+            found_vars = [k for k in os.environ if any(w in k.upper() for w in ("SUPABASE", "KEY", "URL"))]
+            logger.error(
+                "Missing Supabase configuration. url_present=%s, key_present=%s. Related env vars found: %s",
+                bool(url),
+                bool(key),
+                found_vars,
+            )
             raise RuntimeError(
-                "SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY environment variables must be set"
+                f"SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY environment variables must be set. "
+                f"(Detected: url={'SET' if url else 'MISSING'}, key={'SET' if key else 'MISSING'})"
             )
         _supabase_client = create_client(url, key)
-        logger.info("Supabase client initialized (project: %s)", url)
+        logger.info("Supabase client initialized successfully (url: %s)", url)
     return _supabase_client
 
 
